@@ -1,0 +1,6 @@
+1. 安装python，版本建议3.10
+2. 安装依赖：pip install -r requirements.txt
+3. 在aoe_network.json手动输入AOE网的详细信息，包括事件，活动及持续事件，有向边
+3. 运行：
+	draw.py：实现画出AOE图的功能，图片会保存在/out文件夹内
+	aoe.py：计算并打印出出最小项目工期时间，关键活动，依附的两个顶点，以及最早和最迟发生时间

@@ -1,0 +1,26 @@
+{
+    "events": [
+        {"id": 0, "name": "v0"},
+        {"id": 1, "name": "v1"},
+        {"id": 2, "name": "v2"},
+        {"id": 3, "name": "v3"},
+        {"id": 4, "name": "v4"},
+        {"id": 5, "name": "v5"},
+        {"id": 6, "name": "v6"},
+        {"id": 7, "name": "v7"},
+        {"id": 8, "name": "v8"}        
+    ],
+    "activities": [
+        {"id": 0, "from_event": 0, "to_event": 1, "name": "a0", "duration": 6},
+        {"id": 1, "from_event": 0, "to_event": 2, "name": "a1", "duration": 4},
+        {"id": 2, "from_event": 0, "to_event": 3, "name": "a2", "duration": 5},
+        {"id": 3, "from_event": 1, "to_event": 4, "name": "a3", "duration": 1},
+        {"id": 4, "from_event": 2, "to_event": 4, "name": "a4", "duration": 1},
+        {"id": 5, "from_event": 3, "to_event": 5, "name": "a5", "duration": 2},
+        {"id": 6, "from_event": 4, "to_event": 6, "name": "a6", "duration": 9},
+        {"id": 7, "from_event": 4, "to_event": 7, "name": "a7", "duration": 7},
+        {"id": 8, "from_event": 5, "to_event": 7, "name": "a8", "duration": 4},
+        {"id": 9, "from_event": 6, "to_event": 8, "name": "a9", "duration": 2},
+        {"id": 10, "from_event": 7, "to_event": 8, "name": "a10", "duration": 4}
+    ]
+}

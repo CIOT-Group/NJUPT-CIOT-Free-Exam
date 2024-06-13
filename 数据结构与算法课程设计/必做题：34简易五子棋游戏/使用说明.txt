@@ -1,0 +1,2 @@
+1. 下载jdk8或以上版本并添加到系统环境变量中
+2. 从src/View/StartGame.java启动

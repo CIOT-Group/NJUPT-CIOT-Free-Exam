@@ -1,0 +1,7 @@
+3001	TRUE	ink-jet	99
+3002	FALSE	laser	239
+3003	TRUE	laser	899
+3004	TRUE	ink-jet	120
+3005	FALSE	laser	120
+3006	TRUE	ink-jet	100
+3007	TRUE	laser	200

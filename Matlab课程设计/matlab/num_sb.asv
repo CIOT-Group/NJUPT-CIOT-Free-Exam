@@ -1,0 +1,130 @@
+function varargout = num_sb(varargin)
+gui_Singleton = 1;
+gui_State = struct('gui_Name',       mfilename, ...
+                   'gui_Singleton',  gui_Singleton, ...
+                   'gui_OpeningFcn', @num_sb_OpeningFcn, ...
+                   'gui_OutputFcn',  @num_sb_OutputFcn, ...
+                   'gui_LayoutFcn',  [] , ...
+                   'gui_Callback',   []);
+if nargin && ischar(varargin{1})
+    gui_State.gui_Callback = str2func(varargin{1});
+end
+
+if nargout
+    [varargout{1:nargout}] = gui_mainfcn(gui_State, varargin{:});
+else
+    gui_mainfcn(gui_State, varargin{:});
+end
+
+function num_sb_OpeningFcn(hObject, eventdata, handles, varargin)
+handles.output = hObject;
+clear global;clc
+set(gcf,'name','手写数字识别'); %修改GUI的界面名称
+guidata(hObject, handles);
+function varargout = num_sb_OutputFcn(hObject, eventdata, handles) 
+varargout{1} = handles.output;
+
+function pushbutton1_Callback(hObject, eventdata, handles)
+ol_0=[1 7 10];   %欧拉数为0的数
+ol_1=[2 3 4 5 6 8];    %欧拉数为1的数
+load pic1.mat;
+[Fnameh,Pnameh]=uigetfile({'*.*';'*.jpg';'*.png'});%Fnameh显示的文件名称，Pnameh显示的文件路径
+filename=[Pnameh,Fnameh];%存储文件的路径及名称
+I=imread(filename);   %读取图像
+imshow(I);
+I_out=grow(I);
+L=length(I_out);
+num=zeros(1,L);
+for i=1:L
+    I1=I_out(i);
+    I1=cell2mat(I1);
+    figure,imshow(I1)
+    Io=~imbinarize(I1,graythresh(I1));
+    Io=imdilate(Io,strel('disk',3));
+    ol=bweuler(Io);
+    if ol==-1
+        num(i)=8;
+    else
+        GJ=chuli(I1);
+        xsd=zeros(1,10);
+        GJpass=imresize(GJ,[512 512]);
+        if ol==1
+            for j=1:6
+                xsd(j)=corr2(GJpass,GJ2(:,:,ol_1(j)));
+            end
+            xsd=abs(xsd);
+%             wz=find(xsd==max(xsd));
+            num(i)=ol_1(xsd==max(xsd))-1;
+        elseif ol==0
+            for j=1:3
+                xsd(j)=corr2(GJpass,GJ2(:,:,ol_0(j)));
+            end
+            xsd=abs(xsd);
+%             wz=find(xsd==max(xsd));
+            num(i)=ol_0(xsd==max(xsd))-1;   
+        else
+            for j=0:9
+                xsd(j+1)=corr2(GJpass,GJ2(:,:,j+1));
+            end
+            xsd=abs(xsd);
+            num(i)=find(xsd==max(xsd))-1;
+        end     
+    end
+end
+b=num2str(num);
+b(b==' ')='';
+set(handles.edit1,'string',b);
+
+% function pushbutton1_Callback(hObject, eventdata, handles)
+%     ol_0 = [1 7 10];   % 欧拉数为0的数
+%     ol_1 = [2 3 4 5 6 8];    % 欧拉数为1的数
+%     load pic1.mat;
+%     [Fnameh, Pnameh] = uigetfile({'*.*';'*.jpg';'*.png'}); % Fnameh显示的文件名称，Pnameh显示的文件路径
+%     filename = [Pnameh, Fnameh]; % 存储文件的路径及名称
+%     I = imread(filename);   % 读取图像
+%     imshow(I);
+%     I_out = grow(I);  % 假设这是图像分割的处理函数
+%     L = length(I_out);  % 获取分割后的图像数量
+%     num = zeros(1, L);  % 存储每个识别结果
+% 
+%     for i = 1:L
+%         I1 = I_out(i);  % 获取当前的子图
+%         I1 = cell2mat(I1);  % 转换为矩阵形式
+%         figure, imshow(I1);  % 显示当前子图
+% 
+%         % 检查是否是RGB图像，如果是索引图像则转换为RGB
+%         if size(I1, 3) == 1  % 如果是灰度图像
+%             I1 = ind2rgb(I1, gray(256));  % 将索引图像转换为RGB
+%         end
+% 
+%         % 处理图像：转灰度图、调整尺寸、二值化等
+%         img = rgb2gray(imresize(I1, [28, 28]));  % 转灰度图并调整尺寸为28x28
+%         img = imbinarize(img, 0.5);  % 二值化
+%         img = imcomplement(img);  % 背景黑色，数字白色
+%         img = reshape(img, [28, 28, 1]);  % 调整维度以适应网络输入
+% 
+%         % 使用训练好的神经网络进行分类
+%         load("Minist_LeNet5.mat")
+%         result = classify(trainNet, img);  % trainNet是训练好的网络模型
+% 
+%         % 将分类结果转换为数字并存储
+%         num(i) = double(result);  % 假设result是字符类型，可以转换为数字
+%     end
+% 
+%     % 将识别结果转换为字符串并显示在GUI的文本框中
+%     b = num2str(num);
+%     b(b == ' ') = '';  % 去除空格
+%     set(handles.edit1, 'string', b);  % 在GUI中显示结果
+
+
+function edit1_CreateFcn(hObject, eventdata, handles)
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+function axes1_CreateFcn(hObject, eventdata, handles)
+set(gca,'XColor',get(gca,'Color')) ;% 这两行代码功能：将坐标轴和坐标刻度转为白色
+set(gca,'YColor',get(gca,'Color'));
+ 
+set(gca,'XTickLabel',[]); % 这两行代码功能：去除坐标刻度
+set(gca,'YTickLabel',[]);

@@ -1,0 +1,54 @@
+exp_dir: "checkpoints"      # path to save the model
+exp_name: "test"            # name of the experiment
+exp_version: "1.0"          # version of the experiment
+seed: 114514                # random seed for reproducibility
+
+bert:
+  download: false           # whether to download the model
+  cache_dir: "pretrain"     # path to save the cache, if download is true
+  model: "pretrain/chinese-roberta-wwm-ext-large" # path to the pre-trained model or huggingface model name
+
+preprocess:
+  batch_size: 6             # batch size for preprocessing
+  num_workers: 4            # number of workers for preprocessing
+  padding: "max_length"     # padding strategy
+  truncation: true          # whether to truncate sequences
+  max_length: 256           # maximum length of sequences
+  return_tensors: "pt"      # return tensors in pytorch format
+
+data:
+  path: "datasets"          # path to the dataset
+  val_size: 0.1             # proportion of the dataset to use for validation
+  train_ratio: 1.0          # proportion of the dataset to use for training
+  num_workers: 4            # number of workers for data loading
+  pin_memory: false         # whether to pin memory for faster data transfer
+  persistent_workers: true  # whether to keep workers alive after data loading
+
+train:
+  devices: [0]              # list of devices to use for training
+  batch_size: 64            # batch size for training
+  lr: 1e-4                  # learning rate
+  lr_decay: 0.95            # learning rate decay
+  weight_decay: 0.01        # weight decay
+  max_epochs: 200           # maximum number of epochs
+  patience: 20              # number of epochs to wait for improvement before stopping
+  gamma: 2                  # gamma for focal loss
+  monitor: "val_acc"        # metric to monitor for early stopping
+  save_name: "{epoch}_{val_acc:.4f}" # name of the saved model
+  save_top_k: 5             # number of top models to save
+  mode: "max"               # monitor mode
+  save_last: true           # whether to save the last model
+  verbose: true             # whether to print training progress
+  log_every_n_steps: 100    # log every n steps
+
+model:
+  cloud_drop_num: 512       # number of cloud drops
+  cloud_dim: 16             # dimension of cloud drops
+  attention: false          # whether to use attention
+  labels:                   # classifier output labels
+    0: "Negative"
+    1: "Positive"
+  features:                 # hidden dimensions in classifier
+  - 256                     # the first value should be smaller than cloud_drop_num
+  - 64                      # the last value should be larger than len(output)
+  dropout: 0.2              # dropout rate

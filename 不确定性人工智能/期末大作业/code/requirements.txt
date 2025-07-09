@@ -1,0 +1,10 @@
+torch
+pytorch_lightning
+transformers
+tensorboard
+tensorboardX
+pandas
+numpy
+scikit-learn
+tqdm
+omegaconf

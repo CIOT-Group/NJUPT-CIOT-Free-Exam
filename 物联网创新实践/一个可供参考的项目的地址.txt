@@ -1,0 +1,2 @@
+https://github.com/luoli0706/OTO_Exchange.git，
+其中注意前端请求的URL更改为本地后端，别上传到我的服务器上了hh（如果未过期的话）
